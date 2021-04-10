@@ -1,0 +1,99 @@
+@import '../../common-variables.less';
+@import "../../typography.less";
+
+.sidenav-container{
+    .sidenav-panel {
+        color: @textPrimaryColor;
+        width: 240px;
+        .profile-panel{
+            display: flex;
+            height: 96px;
+            justify-content: left;
+            margin: 0px 16px;
+            align-items: center;
+            .profile-picture{
+                margin-right: 8px;
+                img{
+                    height: 64px;
+                    width: 64px;
+                    border-radius: 50%;
+                }
+
+            }
+            .profile-name{  
+                padding-top: 6px;
+            }
+        }
+        .menu{
+            .menu-header{
+                background-color: @navbar-color;
+                padding: 8px 16px;
+                height: 24px;
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+            }
+            .menu-button{
+                width: 100%;
+                padding: 4px 24px;
+                text-align: left;
+                .menu-icon{
+                    margin-right: 12px;
+                    color: @textPrimaryColor;
+                }
+                .menu-text{
+                    color: @textPrimaryColor;
+                }
+            }
+        }
+    }
+    .mat-drawer { 
+        background-color: @profile-background;
+        border-right: none;
+    }
+
+    .mat-drawer-content{
+        background-color: @background-color;
+    }
+    .sidenav-content {
+        .top-toolbar{
+            height: 48px;
+            // background-color: white;
+            margin: 24px 24px;
+            // border:solid 1px rgba(0, 0, 0, 0.12);
+            border-radius: 4px;
+        }
+        .notepad-cards{
+            display: flex;
+            margin: 0px 24px;
+            flex-wrap: wrap;
+            .notes{
+                height: 160px;
+                width: 240px;
+                background-color: @textPrimaryColor;
+                border-radius: 4px;
+                padding: 16px;
+                margin-right: 24px;
+                margin-bottom: 24px;
+                cursor: pointer;
+                overflow:clip;
+            }
+        }
+    }   
+}
+
+.navbar{
+    background-color: @navbar-color;     
+    .dashboard-icons{
+        font-weight: bold;
+        color: @textPrimaryColor;
+    }
+    .navbar-title{
+        color: @textPrimaryColor;
+    }
+    .navbar-right {
+        justify-content: end;
+        flex-grow: 1;
+        display: flex;
+    }
+}

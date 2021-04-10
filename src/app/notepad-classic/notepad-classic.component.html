@@ -1,0 +1,112 @@
+<mat-sidenav-container class="sidenav-container" fullscreen>
+    <mat-sidenav class="sidenav-panel" mode="side" #sidenav opened position="start">
+        <!-- left panel -->
+        <div class="profile-panel">
+            <div class="profile-picture">
+                <img src="../../assets/img/demo.png">
+            </div>
+            <div class="profile-content">
+                <div class="profile-text subtitle-size-2">Rahulraj Nataraj</div>
+                <div class="profile-name caption-size active-empasis">Student</div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu-header inactive-empasis">
+                <span class="subtitle-size-1">Notes</span>
+            </div>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">note</mat-icon>
+                <span class="menu-text body-size-1">All Notes</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">notes</mat-icon>
+                <span class="menu-text body-size-1">To-do's</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">star</mat-icon>
+                <span class="menu-text body-size-1">My Favourites</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">folder_shared</mat-icon>
+                <span class="menu-text body-size-1">Shared with me</span>
+            </button>
+            <!-- Second Header -->
+            <div class="menu-header inactive-empasis">
+                <span class="subtitle-size-1">Tags</span>
+            </div>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon" style="color: #795548;">bookmark</mat-icon>
+                <span class="menu-text body-size-1">Work</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon" style="color: #FF5252;">bookmark</mat-icon>
+                <span class="menu-text body-size-1">Travel</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon" style="color: #FFC107;">bookmark</mat-icon>
+                <span class="menu-text body-size-1">Family</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon" style="color: #2196F3;">bookmark</mat-icon>
+                <span class="menu-text body-size-1">Personal</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon" style="color: #E91E63;">bookmark</mat-icon>
+                <span class="menu-text body-size-1">Untagged</span>
+            </button>
+            <!-- Third Header -->
+            <div class="menu-header inactive-empasis">
+                <span class="subtitle-size-1">Others</span>
+            </div>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">settings</mat-icon>
+                <span class="menu-text body-size-1">Settings</span>
+            </button>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-toolbar class="navbar">
+            <div class="dashboard-icons active-empasis">
+                <button mat-icon-button (click)="sidenav.toggle()">
+                    <mat-icon>menu</mat-icon>
+                </button>
+            </div>
+            <h1 class="navbar-title heading-size-6">All Notes</h1>
+            <div class="navbar-right active-empasis">
+                <span class="dashboard-icons">
+                    <button mat-icon-button>
+                        <mat-icon>notifications</mat-icon>
+                    </button>
+                </span>
+                <span class="dashboard-icons">
+                    <button mat-icon-button>
+                        <mat-icon>sync</mat-icon>
+                    </button>
+                </span>
+                <span class="dashboard-icons">
+                    <button mat-icon-button>
+                        <mat-icon>help</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </mat-toolbar>
+        <div class="sidenav-content">
+            <div class="top-toolbar">
+                <div class="body-size-2 disabled-empasis">Search</div>
+            </div>
+            <div class="notepad-cards">
+
+                <mat-card *ngFor="let note of notes" class="notes">
+                    <div class="body-size-1 active-empasis">
+                        Content
+                    </div>
+                    <div style="margin-top: 16px;" class="body-size-2 inactive-empasis">
+                        The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+                        A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+                        bred for hunting.
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
