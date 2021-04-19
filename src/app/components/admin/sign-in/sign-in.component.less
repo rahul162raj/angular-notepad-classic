@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import "../../../../common-variables.less";
+@import "../../../../typography.less";
+
+.login-container{
+    width: 480px;
+    height: 520px;
+    background-color: white;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    font-family: "Open Sans", sans-serif !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+    .logo-container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        margin: 40px;
+        .logo-image{
+            height: 40px;
+        }
+        .logo-text{
+            margin-left: 12px;
+            color: @classic-nav-logo-color;
+        }
+    }
+    .form-field{
+        text-align: center;
+        padding: 0px 40px;
+        .form-element{
+            padding-bottom: 24px;
+            width: 100%;
+            .login-button{
+                margin-top: 6px;
+                font-family: "Open Sans", sans-serif !important;
+                width: 100%;
+                height: 64px;
+                background-color: #ffd740;
+                color: @classic-icon-high-em-hover-clr;
+            }
+        }
+        .forgot-pwd{
+            margin-top: 16px;
+            color: @classic-icon-low-em-clr;
+            cursor: pointer;
+        }
+        .sign-up{
+            font-family: "Open Sans", sans-serif !important;
+            justify-content: center;
+            display: flex;
+            margin: 24px 0px;
+            color: @classic-icon-low-em-clr;
+            .sign-up-text{
+                cursor: pointer;
+                font-weight: bold;
+                text-decoration: underline;
+                margin-left: 8px;
+            }
+        }
+        //standard
+        .mat-form-field {
+            .mat-form-field-label {
+                color: @classic-icon-high-em-clr;
+                font-family: "Open Sans", sans-serif !important;
+            }
+            .mat-form-field-underline {
+                background-color: rgba(0,0,0,.32);
+            }
+            .mat-form-field-ripple {
+                background-color: rgba(0,0,0,.32);
+            }
+        }
+
+        //invalid
+        .mat-form-field.mat-form-field-invalid {
+            .mat-input-element {
+                color: #f44336;
+            }
+            .mat-form-field-label {
+                color: #f44336;
+                .mat-form-field-required-marker {
+                    color: #f44336;
+                }
+            }
+            .mat-form-field-ripple {
+                background-color: #f44336;
+            }
+        }
+    }
+}
+
+

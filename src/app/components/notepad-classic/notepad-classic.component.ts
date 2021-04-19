@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-notepad-classic',
@@ -7,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NotepadClassicComponent implements OnInit {
 
-  notes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-  constructor() { }
+  constructor(
+    public authService: AuthService) { }
 
   ngOnInit(): void {
   }

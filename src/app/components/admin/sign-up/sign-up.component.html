@@ -1,0 +1,47 @@
+<div class="register-container">
+    <div class="logo-container">
+        <span class="logo-image">
+            <svg width="28" height="40" viewBox="0 0 28 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0H24C26.2091 0 28 1.79086 28 4V36C28 38.2091 26.2091 40 24 40H0V0Z" fill="#FBBC04" />
+                <path
+                    d="M18.6667 23.8182L20 24.4545V14.2727C20 13.5727 19.4 13 18.6667 13H11.9933C11.26 13 10.6667 13.5727 10.6667 14.2727H17.3333C18.0667 14.2727 18.6667 14.8455 18.6667 15.5455V23.8182ZM16 15.5455H9.33333C8.6 15.5455 8 16.1182 8 16.8182V27L12.6667 25.0909L17.3333 27V16.8182C17.3333 16.1182 16.7333 15.5455 16 15.5455Z"
+                    fill="white" fill-opacity="0.87" />
+                <path d="M0 0H2V40H0V0Z" fill="#F29900" />
+            </svg>
+        </span>
+        <span class="logo-text heading-size-4">Have</span>
+    </div>
+    <div class="form-field">
+        <form [formGroup]="loginFormGroup" class="loginForm">
+            <mat-form-field class="form-element">
+                <input matInput placeholder="Username" (focusout)="setValidationError('username')"
+                    formControlName="username">
+                <mat-error *ngIf="!loginFormGroup.controls['username'].valid">
+                    {{ usernameErrorText }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput placeholder="Email" (focusout)="setValidationError('email')"
+                    pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" formControlName="email">
+                <mat-error *ngIf="!loginFormGroup.controls['email'].valid">
+                    {{ emailErrorText }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-element">
+                <input matInput minlength="6" maxlength="128" (focusout)="setValidationError('password')"
+                    type="password" placeholder="Password" formControlName="password">
+                <mat-error *ngIf="!loginFormGroup.controls['password'].valid">
+                    {{ passwordErrorText }}
+                </mat-error>
+            </mat-form-field>
+            <div class="form-element">
+                <button (click)="onClickRegisterBtn()" class="login-button button-text-size" mat-flat-button
+                    color="accent">Create an account</button>
+            </div>
+            <div class="sign-up body-size-1">
+                <span>Already have an account</span>
+                <span class="sign-up-text" routerLink="/sign-in">Log In</span>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+@import '../../../common-variables.less';
+@import "../../../typography.less";
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+.notepad-container{  
+    font-family: "Open Sans", sans-serif !important;
+    .notepad-navbar{
+        height: 64px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 24px;
+        border-bottom: solid 1.5px @classic-divider-color;
+        .navbar-left{
+            display: flex;
+            align-items: center;
+            height: 40px;
+            .logo-image{
+                height: 40px;
+            }
+            .logo-text{
+                margin-left: 6px;
+                color: @classic-nav-logo-color;
+            }
+        }
+        .navbar-right{
+            display: flex;
+            .navbar-icons{
+                height: 40px;
+                width: 40px;
+                margin-right: 6px;
+                border-radius: 50%;
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
+                color: @classic-icon-high-em-clr;
+                &:hover{
+                    color: @classic-icon-high-em-hover-clr;
+                    background-color: @classic-icon-high-em-hover-bg;
+                } 
+            }
+            .profile-panel{
+                display: flex;
+                align-items: center;
+                .profile-picture{
+                    margin-left: 56px;
+                    border-radius: 50%;
+                }
+            }
+        }
+    }
+    .notepad-content{
+        display: flex;
+        .sidenav{
+            background-color: @classic-sidenav-background;
+            width: 280px;
+            height: calc(100vh - 65.5px);
+            .button-group{
+                margin-top: 8px;
+                .menu-button{
+                        width: 100%;
+                        height: 48px;
+                        text-align: left;
+                        padding: 0px 24px;
+                        .menu-icon{
+                            width: 24px;
+                            margin-right: 20px;
+                        }
+                }
+                .normal{
+                    .menu-icon{
+                        color: @classic-sidenav-icon-clr;
+                    }
+                    .menu-text{
+                        color: @classic-sidenav-font-clr;
+                    }
+                    // &:hover{
+                    //     background-color: @classic-sidenav-icon-hover-clr;
+                    // }
+                }
+                .active{
+                    background-color: @classic-sidenav-active-bg-clr;
+                    .menu-icon{
+                        color: @classic-sidenav-font-clr;
+                    }
+                    .menu-text{
+                        color: @classic-sidenav-font-clr;
+                    }
+                }
+            }
+            .divider{
+                margin-top: 8px;
+                height: 1px;
+                background-color: @classic-divider-color;
+            }
+        }
+    }
+}

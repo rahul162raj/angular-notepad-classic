@@ -1,5 +1,5 @@
-@import '../../common-variables.less';
-@import "../../typography.less";
+@import '../../../common-variables.less';
+@import "../../../typography.less";
 
 .sidenav-container{
     .sidenav-panel {
@@ -57,24 +57,36 @@
     }
     .sidenav-content {
         .top-toolbar{
-            height: 48px;
-            // background-color: white;
+            height: 40px;
+            background-color: white;
             margin: 24px 24px;
-            // border:solid 1px rgba(0, 0, 0, 0.12);
+            border:solid 1px rgba(0, 0, 0, 0.12);
             border-radius: 4px;
+            .toolbar-icons{
+                display: flex;
+                justify-content: flex-end;
+                font-weight: bold;
+                color: @font-color;
+                opacity: 60%;
+                .toolbar-btn{
+                    border: solid 1px rgba(0, 0, 0, 0.12);
+                    border-radius: 0%;
+                }
+            }
         }
         .notepad-cards{
             display: flex;
             margin: 0px 24px;
             flex-wrap: wrap;
+            justify-content: flex-start;
             .notes{
                 height: 160px;
-                width: 240px;
+                width: 22%;
                 background-color: @textPrimaryColor;
                 border-radius: 4px;
                 padding: 16px;
-                margin-right: 24px;
-                margin-bottom: 24px;
+                margin-right: 4px;
+                margin-bottom: 8px;
                 cursor: pointer;
                 overflow:clip;
             }

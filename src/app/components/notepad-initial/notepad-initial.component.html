@@ -3,7 +3,7 @@
         <!-- left panel -->
         <div class="profile-panel">
             <div class="profile-picture">
-                <img src="../../assets/img/demo.png">
+                <img src="../../assets/img/profile.png">
             </div>
             <div class="profile-content">
                 <div class="profile-text subtitle-size-2">Rahulraj Nataraj</div>
@@ -15,11 +15,15 @@
                 <span class="subtitle-size-1">Notes</span>
             </div>
             <button mat-button class="menu-button">
-                <mat-icon class="menu-icon">note</mat-icon>
+                <mat-icon class="menu-icon">notes</mat-icon>
                 <span class="menu-text body-size-1">All Notes</span>
             </button>
             <button mat-button class="menu-button">
-                <mat-icon class="menu-icon">notes</mat-icon>
+                <mat-icon class="menu-icon">note</mat-icon>
+                <span class="menu-text body-size-1">Notes</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">check_circle</mat-icon>
                 <span class="menu-text body-size-1">To-do's</span>
             </button>
             <button mat-button class="menu-button">
@@ -29,6 +33,10 @@
             <button mat-button class="menu-button">
                 <mat-icon class="menu-icon">folder_shared</mat-icon>
                 <span class="menu-text body-size-1">Shared with me</span>
+            </button>
+            <button mat-button class="menu-button">
+                <mat-icon class="menu-icon">delete</mat-icon>
+                <span class="menu-text body-size-1">Bin</span>
             </button>
             <!-- Second Header -->
             <div class="menu-header inactive-empasis">
@@ -45,10 +53,6 @@
             <button mat-button class="menu-button">
                 <mat-icon class="menu-icon" style="color: #FFC107;">bookmark</mat-icon>
                 <span class="menu-text body-size-1">Family</span>
-            </button>
-            <button mat-button class="menu-button">
-                <mat-icon class="menu-icon" style="color: #2196F3;">bookmark</mat-icon>
-                <span class="menu-text body-size-1">Personal</span>
             </button>
             <button mat-button class="menu-button">
                 <mat-icon class="menu-icon" style="color: #E91E63;">bookmark</mat-icon>
@@ -92,7 +96,14 @@
         </mat-toolbar>
         <div class="sidenav-content">
             <div class="top-toolbar">
-                <div class="body-size-2 disabled-empasis">Search</div>
+                <div class="toolbar-icons">
+                    <button mat-icon-button class="toolbar-btn">
+                        <mat-icon>view_list</mat-icon>
+                    </button>
+                    <button mat-icon-button class="toolbar-btn">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </div>
             </div>
             <div class="notepad-cards">
 
