@@ -22,6 +22,7 @@ import { SignInComponent } from './components/admin/sign-in/sign-in.component';
 import { SignUpComponent } from './components/admin/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/admin/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/admin/verify-email/verify-email.component';
+import { ConfirmDialogComponent } from 'src/shared/confirm-dialog.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAnayzMvaOtt9-7rq-_cOjnjlon13jrnZI",
@@ -42,6 +43,7 @@ const firebaseConfig = {
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

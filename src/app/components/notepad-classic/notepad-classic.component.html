@@ -1,5 +1,6 @@
 <div class="notepad-container">
-    <div class="notepad-navbar">
+    <!-- Navbar section -->
+    <div class="notepad-navbar" [ngClass]="{'navbar-fixed': isSticky === true}">
         <div class="navbar-left">
             <span class="logo-image">
                 <svg width="28" height="40" viewBox="0 0 28 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -11,76 +12,256 @@
                 </svg>
             </span>
             <span class="logo-text navbar-logo-font">Have</span>
+            <div class="search-section" [ngClass]="searchFieldFocus ? 'searchActive' : 'noSearchActive'">
+                <button class="search-icon">
+                    <mat-icon>search</mat-icon>
+                </button>
+                <input [(ngModel)]="searchField" (focus)="onFocusSearchInput('in')"
+                    (focusout)="onFocusSearchInput('out')" class="search-text" type="text" placeholder="Search">
+                <button (click)="searchField = null" [ngStyle]="{'visibility': searchField ? 'visible' : 'hidden' }"
+                    class="search-icon">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
         </div>
         <div class="navbar-right">
+            <button *ngIf="(!loadIframe && !hideComposeBtn)" (click)="onComposeBtnClick()"
+                class="compose-btn button-text-size" mat-stroked-button color="accent">
+                <mat-icon class="add-icon">add</mat-icon>
+                <span>Compose</span>
+            </button>
+            <button [matMenuTriggerFor]="moreMenu" class="navbar-icons">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #moreMenu="matMenu" xPosition="after">
+                <button mat-menu-item (click)="openDialog()" [disabled]="notepadList.length === 0">Delete All</button>
+            </mat-menu>
             <button class="navbar-icons">
                 <mat-icon>notifications</mat-icon>
             </button>
-            <button class="navbar-icons">
+            <button (click)="getNotes()" class="navbar-icons">
                 <mat-icon>sync</mat-icon>
             </button>
-            <button class="navbar-icons">
-                <mat-icon (click)="authService.SignOut()">view_list</mat-icon>
+            <button (click)="notepadService.viewListBtn = !notepadService.viewListBtn" class="navbar-icons">
+                <mat-icon *ngIf="!notepadService.viewListBtn">view_agenda</mat-icon>
+                <mat-icon *ngIf="notepadService.viewListBtn">view_module</mat-icon>
             </button>
-            <div class="profile-panel">
+            <div [matMenuTriggerFor]="profileMenu" class="profile-panel">
                 <img class="profile-picture" height="40px" width="40px" src="../../assets/img/profile.png">
             </div>
+            <mat-menu #profileMenu="matMenu" xPosition="after">
+                <button mat-menu-item disabled="true">Dark Mode</button>
+                <button mat-menu-item disabled="true">Setting</button>
+                <button mat-menu-item (click)="authService.SignOut()">Log out</button>
+            </mat-menu>
         </div>
     </div>
     <div class="notepad-content">
+        <!-- Sidenav section -->
         <div class="sidenav">
             <div class="button-group">
-                <button mat-button class="menu-button active">
+                <button mat-button class="menu-button" routerLink="/notepad/notes"
+                    [ngClass]="routedParam === sideNavEnum['ALLNOTES'] ? 'active' : 'normal'">
                     <i class="material-icons material-icons-outlined menu-icon">notes</i>
                     <span class="menu-text sidenav-btn-font">All Notes</span>
                 </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">note_outline</i>
-                    <span class="menu-text sidenav-btn-font">Notes</span>
-                </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">check_circle_outline</i>
-                    <span class="menu-text sidenav-btn-font">To-do's</span>
-                </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">folder_shared_outline</i>
-                    <span class="menu-text sidenav-btn-font">Shared with me</span>
-                </button>
-                <button mat-button class="menu-button normal">
+                <button mat-button class="menu-button" routerLink="/notepad/favourites"
+                    [ngClass]="routedParam === sideNavEnum['FAVOURITES'] ? 'active' : 'normal'">
                     <i class="material-icons material-icons-outlined menu-icon">star_border</i>
                     <span class="menu-text sidenav-btn-font">Favourites</span>
                 </button>
-                <button mat-button class="menu-button normal">
+                <button mat-button class="menu-button normal" routerLink="/notepad/shared"
+                    [ngClass]="routedParam === sideNavEnum['SHARED'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons-outlined menu-icon">folder_shared_outline</i>
+                    <span class="menu-text sidenav-btn-font">Shared with me</span>
+                </button>
+                <button mat-button class="menu-button normal" routerLink="/notepad/bin"
+                    [ngClass]="routedParam === sideNavEnum['BIN'] ? 'active' : 'normal'">
                     <i class="material-icons material-icons-outlined menu-icon">delete_outline</i>
                     <span class="menu-text sidenav-btn-font">Bin</span>
                 </button>
             </div>
             <div class="divider"></div>
             <div class="button-group">
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">add</i>
-                    <span class="menu-text sidenav-btn-font">Add Label</span>
-                </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outline</i>
+                <button mat-button class="menu-button normal" routerLink="/notepad/travel"
+                    [ngClass]="routedParam === sideNavEnum['TRAVEL_LABEL'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons-outlined menu-icon">flight_takeoff</i>
                     <span class="menu-text sidenav-btn-font">Travel</span>
                 </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outline</i>
+                <button mat-button class="menu-button normal" routerLink="/notepad/personal"
+                    [ngClass]="routedParam === sideNavEnum['PERSONAL_LABEL'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons-outlined menu-icon">person</i>
                     <span class="menu-text sidenav-btn-font">Personal</span>
                 </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outline</i>
-                    <span class="menu-text sidenav-btn-font">Life</span>
-                </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outline</i>
+                <button mat-button class="menu-button normal" routerLink="/notepad/work"
+                    [ngClass]="routedParam === sideNavEnum['WORK_LABEL'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons menu-icon">work_outline</i>
                     <span class="menu-text sidenav-btn-font">Work</span>
                 </button>
-                <button mat-button class="menu-button normal">
-                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outline</i>
+                <button mat-button class="menu-button normal" routerLink="/notepad/life"
+                    [ngClass]="routedParam === sideNavEnum['LIFE_LABEL'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons-outlined menu-icon">people</i>
+                    <span class="menu-text sidenav-btn-font">Life</span>
+                </button>
+                <button mat-button class="menu-button normal" routerLink="/notepad/untagged"
+                    [ngClass]="routedParam === sideNavEnum['UNTAGGED'] ? 'active' : 'normal'">
+                    <i class="material-icons material-icons-outlined menu-icon">bookmark_outlined</i>
                     <span class="menu-text sidenav-btn-font">Untagged</span>
                 </button>
+            </div>
+        </div>
+        <div class="main-content">
+            <!-- Note Section -->
+            <div *ngIf="!isLoading">
+                <div *ngIf="notepadList.length" class="all-notes">
+                    <div class="cards" *ngFor="let note of notepadList"
+                        [ngStyle]="{'width' : notepadService.viewListBtn ? '800px' : '280px', 'background-color' : note.color}">
+                        <div class="card-top" (click)="onClickCardItem(note)">
+                            <div class="card-title subtitle-size-1">{{note.title}}</div>
+                            <div class="card-content body-size-2">{{note.textContent}}</div>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="card-icons">
+                                <mat-icon *ngIf="!note.favourite">star_bordered</mat-icon>
+                                <mat-icon *ngIf="note.favourite" [ngStyle]="{'color': '#FBBC04' }">star
+                                </mat-icon>
+                            </div>
+                            <div class="card-icons">
+                                <mat-icon>{{note.label}}</mat-icon>
+                            </div>
+                            <button class="card-icons" (click)="deleteNote(note)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- No notes Section -->
+                <div class="no-notes" *ngIf="!notepadList.length">
+                    <div class="no-note-container">
+                        <mat-icon class="no-note-icon">file_copy</mat-icon>
+                        <div class="no-note-text">No notes added here</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Loading bar -->
+            <div class="loading-bar" *ngIf="isLoading">
+                <span class="spinner"></span>
+            </div>
+        </div>
+    </div>
+    <!-- frame section -->
+    <div class="compose-note"
+        [ngStyle]="{'visibility': loadIframe ? 'visible' : 'hidden', 'background-color' : loadIframe ? 'rgb(32,33,36,0.60)' : 'transparent' }">
+        <div class="frame" [ngStyle]="{'background-color': iframeBgColor }">
+            <div class="frame-top">
+                <input class="title-content" [(ngModel)]="iframeTitle" type="text" placeholder="Title">
+                <button [disabled]="disableCloseBtn" mat-icon-button color="warn" (click)="onClickCloseBtn()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </div>
+            <div class="frame-text">
+                <div class="divider-stroke">
+                    <button (click)="execCmd('bold')" class="format-icons">
+                        <mat-icon>format_bold</mat-icon>
+                    </button>
+                    <button (click)="execCmd('italic')" class="format-icons">
+                        <mat-icon>format_italic</mat-icon>
+                    </button>
+                    <button (click)="execCmd('underline')" class="format-icons">
+                        <mat-icon>format_underlined</mat-icon>
+                    </button>
+                    <button (click)="execCmd('strikethrough')" class="format-icons">
+                        <mat-icon>strikethrough_s</mat-icon>
+                    </button>
+                </div>
+                <div class="divider-stroke">
+                    <button (click)="execCmd('justifyLeft')" class="format-icons">
+                        <mat-icon>format_align_left</mat-icon>
+                    </button>
+                    <button (click)="execCmd('justifyCenter')" class="format-icons">
+                        <mat-icon>format_align_center</mat-icon>
+                    </button>
+                    <button (click)="execCmd('justifyRight')" class="format-icons">
+                        <mat-icon>format_align_right</mat-icon>
+                    </button>
+                    <button (click)="execCmd('justifyFull')" class="format-icons">
+                        <mat-icon>format_align_justify</mat-icon>
+                    </button>
+                </div>
+                <div class="divider-stroke">
+                    <button (click)="execCmd('insertUnorderedList')" class="format-icons">
+                        <mat-icon>format_list_bulleted</mat-icon>
+                    </button>
+                    <button (click)="execCmd('insertOrderedList')" class="format-icons">
+                        <mat-icon>format_list_numbered</mat-icon>
+                    </button>
+                    <button (click)="execCmd('outdent')" class="format-icons">
+                        <mat-icon>format_indent_decrease</mat-icon>
+                    </button>
+                    <button (click)="execCmd('indent')" class="format-icons">
+                        <mat-icon>format_indent_increase</mat-icon>
+                    </button>
+                </div>
+                <div class="divider-stroke" style="border: none">
+                    <button class="format-icons">
+                        <mat-icon>insert_photo</mat-icon>
+                    </button>
+                    <button (click)="execCmd('undo')" class="format-icons">
+                        <mat-icon>undo_icon</mat-icon>
+                    </button>
+                    <button (click)="execCmd('redo')" class="format-icons">
+                        <mat-icon>redo_icon</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <iframe class="frame-note richTextField">
+            </iframe>
+            <div class="frame-bottom">
+                <div [ngStyle]="{'margin-left': '8px' }">
+                    <button class="frame-icons" (click)="iframeFavourite = !iframeFavourite">
+                        <mat-icon *ngIf="!iframeFavourite">star_bordered</mat-icon>
+                        <mat-icon *ngIf="iframeFavourite" [ngStyle]="{'color': '#FBBC04' }">star</mat-icon>
+                    </button>
+                    <button class="frame-icons">
+                        <mat-icon>folder_shared</mat-icon>
+                    </button>
+                    <button class="frame-icons" [matMenuTriggerFor]="colorMenu">
+                        <mat-icon>color_lens</mat-icon>
+                    </button>
+                    <mat-menu #colorMenu="matMenu" yPosition="above">
+                        <div [ngStyle]="{'display': 'flex', 'flex-wrap': 'wrap','width': '168px'}">
+                            <span (click)="iframeBgColor = bgColor" *ngFor="let bgColor of frameBgItems" [ngStyle]="{'background-color': bgColor, 'height':'24px',
+                                'width':'24px', 'margin':'8px','border-radius':'50%',
+                                'cursor':'pointer', 'border' : 'solid 1.5px #DADCE0'}">
+                            </span>
+                        </div>
+                    </mat-menu>
+                    <button class="frame-icons">
+                        <mat-icon>cloud_download</mat-icon>
+                    </button>
+                    <button [matMenuTriggerFor]="labelMenu" class="frame-icons">
+                        <mat-icon>{{iframelabelIcon}}</mat-icon>
+                    </button>
+                    <mat-menu #labelMenu="matMenu" yPosition="above">
+                        <div [ngStyle]="{'display': 'flex', 'flex-wrap': 'wrap','width': '216px'}">
+                            <span (click)="iframelabelIcon = icon" *ngFor="let icon of iframeLabelItems" [ngStyle]="{'height':'24px',
+                                'width':'24px', 'margin':'8px','cursor':'pointer', 'color':'#747474'}">
+                                <mat-icon>{{icon}}</mat-icon>
+                            </span>
+                        </div>
+                    </mat-menu>
+                    <button class="frame-icons">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </div>
+                <div class="disabled-empasis">
+                    Last updated on 18.9.20
+                </div>
+                <div>
+                    <button class="frame-icons">
+                        <mat-icon>fullscreen</mat-icon>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

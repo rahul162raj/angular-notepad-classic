@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{data.header}}</h1>
+<div mat-dialog-content>{{data.message}}</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onClickDialogClose()" [disabled]="isBtnDisable">{{data.ok}}</button>
+    <button mat-button mat-dialog-close="no">{{data.cancel}}</button>
+</div>

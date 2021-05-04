@@ -3,13 +3,16 @@ import { User } from "../vo/user";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
+import { SIDENAV } from 'src/app/enum/notepadEnum';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
-  userData: any; // Save logged in user data
+
+  public userData: any; // Save logged in user data
+  sideNavEnum = SIDENAV;
 
   constructor(
     public afs: AngularFirestore,   // Inject Firestore service
@@ -36,7 +39,7 @@ export class AuthService {
     return this.afAuth.signInWithEmailAndPassword(email, password)
       .then((result) => {
         this.ngZone.run(() => {
-          this.router.navigate(['notepad']);
+          this.router.navigate(['notepad/' + this.sideNavEnum.ALLNOTES]);
         });
         this.SetUserData(result.user);
       }).catch((error) => {

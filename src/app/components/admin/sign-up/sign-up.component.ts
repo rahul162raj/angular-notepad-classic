@@ -45,7 +45,7 @@ export class SignUpComponent implements OnInit {
 
   onClickRegisterBtn() {
     if (this.loginFormGroup.valid) {
-      // this.authService.SignUp(this.loginFormGroup.get('email').value, this.loginFormGroup.get('password').value)
+      this.authService.SignUp(this.loginFormGroup.get('email').value, this.loginFormGroup.get('password').value)
     }
   }
 

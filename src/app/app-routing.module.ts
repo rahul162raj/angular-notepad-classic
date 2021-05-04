@@ -10,12 +10,26 @@ import { AuthGuard } from 'src/app/guard/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
-  { path: 'notepad', component: NotepadClassicComponent, canActivate: [AuthGuard] },
   { path: 'sign-in', component: SignInComponent },
   { path: 'register-user', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'verify-email-address', component: VerifyEmailComponent },
   { path: 'initial', component: NotepadInitialComponent },
+  {
+    path: 'notepad',
+    children: [
+      { path: 'notes', component: NotepadClassicComponent },
+      { path: 'favourites', component: NotepadClassicComponent },
+      { path: 'shared', component: NotepadClassicComponent },
+      { path: 'bin', component: NotepadClassicComponent },
+      { path: 'travel', component: NotepadClassicComponent },
+      { path: 'personal', component: NotepadClassicComponent },
+      { path: 'life', component: NotepadClassicComponent },
+      { path: 'work', component: NotepadClassicComponent },
+      { path: 'untagged', component: NotepadClassicComponent }
+    ],
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({
