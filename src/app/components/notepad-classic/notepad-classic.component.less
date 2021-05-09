@@ -121,9 +121,9 @@
       .profile-panel {
         display: flex;
         align-items: center;
+        margin-left: 56px;
         cursor: pointer;
         .profile-picture {
-          margin-left: 56px;
           border-radius: 50%;
         }
       }
@@ -232,15 +232,22 @@
               padding: 0px;
               background-color: transparent;
               border: none;
-              cursor: pointer;
               color: #616161;
               margin: 0px 8px;
               mat-icon {
                 font-size: 20px;
               }
-              &:hover {
-                color: @classic-icon-high-em-hover-clr;
+            }
+            .card-icons-delete {
+              padding: 0px;
+              background-color: transparent;
+              border: none;
+              color: #f44336;
+              margin: 0px 8px;
+              mat-icon {
+                font-size: 20px;
               }
+              cursor: pointer;
             }
           }
           &:hover {
@@ -394,35 +401,124 @@
       }
     }
   }
-
-  // Notification section
-  .notifications-arrow {
-    height: 64px;
-    width: 64px;
-    background-color: white;
-    border: solid 0.5px @classic-divider-color;
-    position: fixed;
-    top: 58px;
-    right: 232px;
-    z-index: 3;
-    transform: rotate(45deg);
-  }
-  .notifications {
-    position: fixed;
-    height: 260px;
-    width: 400px;
-    background-color: white;
-    border: solid 0.5px @classic-divider-color;
-    top: 74px;
-    right: 48px;
-    z-index: 3;
-  }
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+// Notification section
+::ng-deep .notification-panel {
+  max-width: 480px !important;
+  width: 480px;
+}
+::ng-deep .mat-badge-content {
+  background: @classic-nav-logo-bg-color !important;
+}
+
+.notification-item {
+  .notification-header {
+    display: flex;
+    align-items: center;
+    padding: 0px 16px;
+    height: 48px;
+    justify-content: space-between;
+    .notification-top {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      color: @classic-icon-high-em-hover-clr;
+      .notification-logo {
+        margin-right: 8px;
+      }
+    }
+    .mark-as-read {
+      color: @classic-icon-high-em-hover-clr;
+      .mat-icon {
+        line-height: 20px !important;
+      }
+    }
+  }
+  .notification-divider {
+    margin-top: 4px;
+    height: 1px;
+    background-color: @classic-divider-color;
+  }
+  .notification-content {
+    overflow-y: auto;
+    margin-top: 8px;
+    max-height: 400px;
+    .notification-cards {
+      height: 64px;
+      cursor: pointer;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      padding: 0px 16px;
+      .card-icon {
+        height: 32px;
+        width: 32px;
+        margin-right: 12px;
+        background-color: black;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .card-text {
+        width: 352px;
+        text-overflow: ellipsis;
+        color: @classic-icon-low-em-clr;
+      }
+      .card-caption {
+        margin-left: 12px;
+        width: 40px;
+        text-align: center;
+        color: #80868b;
+        opacity: 0.9;
+      }
+      &:hover {
+        background-color: @classic-sidenav-icon-hover-clr;
+      }
+    }
+    .no-notification-cards {
+      height: 64px;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .no-data-icon {
+        margin-right: 4px;
+        color: #80868b;
+        opacity: 0.55;
+      }
+      .no-data-text {
+        color: #80868b;
+        opacity: 0.55;
+      }
+    }
+  }
+}
+
+// shared section
+::ng-deep .shared-panel {
+  max-width: 480px !important;
+  width: 480px;
+}
+
+.shared-content {
+  .shared-title {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    margin: 0px 16px;
+    color: @classic-icon-high-em-hover-clr;
+  }
+  .shared-autocomplete {
+    max-height: 260px;
+    margin: 8px 24px 0px 24px;
   }
 }

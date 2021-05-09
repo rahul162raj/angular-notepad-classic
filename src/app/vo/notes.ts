@@ -1,4 +1,5 @@
 export class notes {
+    uid: string;
     id: string;
     title: string;
     textContent: string;
@@ -7,4 +8,5 @@ export class notes {
     shared: string[];
     color: string;
     label: string;
+    trash: boolean;
 }

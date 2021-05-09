@@ -23,6 +23,7 @@ import { SignUpComponent } from './components/admin/sign-up/sign-up.component';
 import { ForgotPasswordComponent } from './components/admin/forgot-password/forgot-password.component';
 import { VerifyEmailComponent } from './components/admin/verify-email/verify-email.component';
 import { ConfirmDialogComponent } from 'src/shared/confirm-dialog.component';
+import { UserAutocompleteComponent } from './components/autocomplete/user-autocomplete.component'
 
 const firebaseConfig = {
   apiKey: "AIzaSyAnayzMvaOtt9-7rq-_cOjnjlon13jrnZI",
@@ -43,7 +44,8 @@ const firebaseConfig = {
     SignUpComponent,
     ForgotPasswordComponent,
     VerifyEmailComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    UserAutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +59,9 @@ const firebaseConfig = {
     AngularFireAuthModule, // auth
     AngularFireStorageModule // storage
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

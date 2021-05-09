@@ -13,7 +13,7 @@
             </span>
             <span class="logo-text navbar-logo-font">Have</span>
             <div class="search-section" [ngClass]="searchFieldFocus ? 'searchActive' : 'noSearchActive'">
-                <button class="search-icon">
+                <button class="search-icon" matTooltip="Search">
                     <mat-icon>search</mat-icon>
                 </button>
                 <input [(ngModel)]="searchField" (focus)="onFocusSearchInput('in')"
@@ -25,28 +25,60 @@
             </div>
         </div>
         <div class="navbar-right">
-            <button *ngIf="(!loadIframe && !hideComposeBtn)" (click)="onComposeBtnClick()"
-                class="compose-btn button-text-size" mat-stroked-button color="accent">
+            <button class="compose-btn button-text-size" *ngIf="(!loadIframe && !hideComposeBtn)" matTooltip="Compose"
+                (click)="onComposeBtnClick()" mat-stroked-button color="accent">
                 <mat-icon class="add-icon">add</mat-icon>
                 <span>Compose</span>
             </button>
-            <button [matMenuTriggerFor]="moreMenu" class="navbar-icons">
+            <button matTooltip="More" class="navbar-icons" *ngIf="this.routedParam !== this.sideNavEnum.SHARED"
+                [matMenuTriggerFor]="moreMenu">
                 <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #moreMenu="matMenu" xPosition="after">
                 <button mat-menu-item (click)="openDialog()" [disabled]="notepadList.length === 0">Delete All</button>
             </mat-menu>
-            <button class="navbar-icons">
-                <mat-icon>notifications</mat-icon>
-            </button>
-            <button (click)="getNotes()" class="navbar-icons">
+            <button class="navbar-icons" matTooltip="Sync" (click)="getNotes()">
                 <mat-icon>sync</mat-icon>
             </button>
-            <button (click)="notepadService.viewListBtn = !notepadService.viewListBtn" class="navbar-icons">
+            <button class="navbar-icons" [matTooltip]="getTooltip()"
+                (click)="notepadService.viewListBtn = !notepadService.viewListBtn">
                 <mat-icon *ngIf="!notepadService.viewListBtn">view_agenda</mat-icon>
                 <mat-icon *ngIf="notepadService.viewListBtn">view_module</mat-icon>
             </button>
-            <div [matMenuTriggerFor]="profileMenu" class="profile-panel">
+            <button class="navbar-icons" matTooltip="Notifications" [matMenuTriggerFor]="notificationMenu">
+                <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">notifications</mat-icon>
+            </button>
+            <mat-menu class="notification-panel" #notificationMenu="matMenu" xPosition="before">
+                <div class="notification-item" (click)="$event.stopPropagation();">
+                    <div class="notification-header">
+                        <div class="notification-top">
+                            <mat-icon class="notification-logo">notifications_active</mat-icon>
+                            <span class="notification-title subtitle-size-1">Notifications (<i>Implementation
+                                    pending</i>)</span>
+                        </div>
+                        <button class="mark-as-read" mat-icon-button>
+                            <mat-icon>check</mat-icon>
+                        </button>
+                    </div>
+                    <div class="notification-divider"></div>
+                    <div class="notification-content">
+                        <div *ngIf="!notificationList.length" class="no-notification-cards">
+                            <mat-icon class="no-data-icon">notifications_off</mat-icon>
+                            <div class="no-data-text body-size-1">No notifcations</div>
+                        </div>
+                        <div *ngIf="notificationList.length">
+                            <div class="notification-cards" *ngFor="let note of notificationList">
+                                <img class="card-icon" src="../../assets/img/profile.png">
+                                <span class="card-text body-size-2">
+                                    <b>Margo Carn</b> has invited you to the note <b>Web Dolfin</b>
+                                </span>
+                                <span class="card-caption body-size-2">11m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-menu>
+            <div class="profile-panel" matTooltip="Profile" [matMenuTriggerFor]="profileMenu">
                 <img class="profile-picture" height="40px" width="40px" src="../../assets/img/profile.png">
             </div>
             <mat-menu #profileMenu="matMenu" xPosition="after">
@@ -114,7 +146,7 @@
             <!-- Note Section -->
             <div *ngIf="!isLoading">
                 <div *ngIf="notepadList.length" class="all-notes">
-                    <div class="cards" *ngFor="let note of notepadList"
+                    <div class="cards" *ngFor="let note of getNotepadList()"
                         [ngStyle]="{'width' : notepadService.viewListBtn ? '800px' : '280px', 'background-color' : note.color}">
                         <div class="card-top" (click)="onClickCardItem(note)">
                             <div class="card-title subtitle-size-1">{{note.title}}</div>
@@ -129,7 +161,8 @@
                             <div class="card-icons">
                                 <mat-icon>{{note.label}}</mat-icon>
                             </div>
-                            <button class="card-icons" (click)="deleteNote(note)">
+                            <button matTooltip="Delete Note" class="card-icons-delete"
+                                *ngIf="this.routedParam !== this.sideNavEnum.SHARED" (click)="deleteNote(note)">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </div>
@@ -155,61 +188,62 @@
         <div class="frame" [ngStyle]="{'background-color': iframeBgColor }">
             <div class="frame-top">
                 <input class="title-content" [(ngModel)]="iframeTitle" type="text" placeholder="Title">
-                <button [disabled]="disableCloseBtn" mat-icon-button color="warn" (click)="onClickCloseBtn()">
+                <button matTooltip="Close" [disabled]="disableCloseBtn" mat-icon-button color="warn"
+                    (click)="onClickCloseBtn()">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
             <div class="frame-text">
                 <div class="divider-stroke">
-                    <button (click)="execCmd('bold')" class="format-icons">
+                    <button matTooltip="Bold" (click)="execCmd('bold')" class="format-icons">
                         <mat-icon>format_bold</mat-icon>
                     </button>
-                    <button (click)="execCmd('italic')" class="format-icons">
+                    <button matTooltip="Italic" (click)="execCmd('italic')" class="format-icons">
                         <mat-icon>format_italic</mat-icon>
                     </button>
-                    <button (click)="execCmd('underline')" class="format-icons">
+                    <button matTooltip="Underline" (click)="execCmd('underline')" class="format-icons">
                         <mat-icon>format_underlined</mat-icon>
                     </button>
-                    <button (click)="execCmd('strikethrough')" class="format-icons">
+                    <button matTooltip="Strike" (click)="execCmd('strikethrough')" class="format-icons">
                         <mat-icon>strikethrough_s</mat-icon>
                     </button>
                 </div>
                 <div class="divider-stroke">
-                    <button (click)="execCmd('justifyLeft')" class="format-icons">
+                    <button matTooltip="Align Left" (click)="execCmd('justifyLeft')" class="format-icons">
                         <mat-icon>format_align_left</mat-icon>
                     </button>
-                    <button (click)="execCmd('justifyCenter')" class="format-icons">
+                    <button matTooltip="Align Center" (click)="execCmd('justifyCenter')" class="format-icons">
                         <mat-icon>format_align_center</mat-icon>
                     </button>
-                    <button (click)="execCmd('justifyRight')" class="format-icons">
+                    <button matTooltip="Align Right" (click)="execCmd('justifyRight')" class="format-icons">
                         <mat-icon>format_align_right</mat-icon>
                     </button>
-                    <button (click)="execCmd('justifyFull')" class="format-icons">
+                    <button matTooltip="Justify Center" (click)="execCmd('justifyFull')" class="format-icons">
                         <mat-icon>format_align_justify</mat-icon>
                     </button>
                 </div>
                 <div class="divider-stroke">
-                    <button (click)="execCmd('insertUnorderedList')" class="format-icons">
+                    <button matTooltip="Bullet List" (click)="execCmd('insertUnorderedList')" class="format-icons">
                         <mat-icon>format_list_bulleted</mat-icon>
                     </button>
-                    <button (click)="execCmd('insertOrderedList')" class="format-icons">
+                    <button matTooltip="Number List" (click)="execCmd('insertOrderedList')" class="format-icons">
                         <mat-icon>format_list_numbered</mat-icon>
                     </button>
-                    <button (click)="execCmd('outdent')" class="format-icons">
+                    <button matTooltip="Indent Left" (click)="execCmd('outdent')" class="format-icons">
                         <mat-icon>format_indent_decrease</mat-icon>
                     </button>
-                    <button (click)="execCmd('indent')" class="format-icons">
+                    <button matTooltip="Indent Right" (click)="execCmd('indent')" class="format-icons">
                         <mat-icon>format_indent_increase</mat-icon>
                     </button>
                 </div>
                 <div class="divider-stroke" style="border: none">
-                    <button class="format-icons">
+                    <button matTooltip="Insert Photo" class="format-icons">
                         <mat-icon>insert_photo</mat-icon>
                     </button>
-                    <button (click)="execCmd('undo')" class="format-icons">
+                    <button matTooltip="Undo" (click)="execCmd('undo')" class="format-icons">
                         <mat-icon>undo_icon</mat-icon>
                     </button>
-                    <button (click)="execCmd('redo')" class="format-icons">
+                    <button matTooltip="Redo" (click)="execCmd('redo')" class="format-icons">
                         <mat-icon>redo_icon</mat-icon>
                     </button>
                 </div>
@@ -217,15 +251,30 @@
             <iframe class="frame-note richTextField">
             </iframe>
             <div class="frame-bottom">
-                <div [ngStyle]="{'margin-left': '8px' }">
-                    <button class="frame-icons" (click)="iframeFavourite = !iframeFavourite">
+                <div [ngStyle]="{'margin-left': '16px' }">
+                    <button matTooltip="Favourite" matTooltipPosition="above" class="frame-icons"
+                        (click)="iframeFavourite = !iframeFavourite">
                         <mat-icon *ngIf="!iframeFavourite">star_bordered</mat-icon>
                         <mat-icon *ngIf="iframeFavourite" [ngStyle]="{'color': '#FBBC04' }">star</mat-icon>
                     </button>
-                    <button class="frame-icons">
+                    <button matTooltip="Collabrator" matTooltipPosition="above"
+                        *ngIf="this.routedParam !== this.sideNavEnum.SHARED" class="frame-icons"
+                        [matMenuTriggerFor]="sharedMenu">
                         <mat-icon>folder_shared</mat-icon>
                     </button>
-                    <button class="frame-icons" [matMenuTriggerFor]="colorMenu">
+                    <mat-menu class="shared-panel" #sharedMenu="matMenu" yPosition="above">
+                        <div class="shared-content" (click)="$event.stopPropagation();">
+                            <div class="shared-title subtitle-size-1">
+                                Shared with
+                            </div>
+                            <div class="shared-autocomplete">
+                                <user-autocomplete>
+                                </user-autocomplete>
+                            </div>
+                        </div>
+                    </mat-menu>
+                    <button matTooltip="Change Color" matTooltipPosition="above" class="frame-icons"
+                        [matMenuTriggerFor]="colorMenu">
                         <mat-icon>color_lens</mat-icon>
                     </button>
                     <mat-menu #colorMenu="matMenu" yPosition="above">
@@ -236,10 +285,8 @@
                             </span>
                         </div>
                     </mat-menu>
-                    <button class="frame-icons">
-                        <mat-icon>cloud_download</mat-icon>
-                    </button>
-                    <button [matMenuTriggerFor]="labelMenu" class="frame-icons">
+                    <button matTooltip="Add Label" matTooltipPosition="above" [matMenuTriggerFor]="labelMenu"
+                        class="frame-icons">
                         <mat-icon>{{iframelabelIcon}}</mat-icon>
                     </button>
                     <mat-menu #labelMenu="matMenu" yPosition="above">
@@ -250,9 +297,6 @@
                             </span>
                         </div>
                     </mat-menu>
-                    <!-- <button class="frame-icons">
-                        <mat-icon>more_vert</mat-icon>
-                    </button> -->
                 </div>
                 <div class="disabled-empasis">
                     Last updated on 18.9.20
@@ -265,7 +309,4 @@
             </div>
         </div>
     </div>
-    <!-- Notification section -->
-    <!-- <div class="notifications-arrow"></div> -->
-    <!-- <div class="notifications"> </div> -->
 </div>

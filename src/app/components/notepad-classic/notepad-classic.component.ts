@@ -1,4 +1,4 @@
-import { HostListener, ViewEncapsulation } from '@angular/core';
+import { HostListener, ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,12 +9,12 @@ import { FRAMEBG, FRAMELABELICON, SIDENAV } from 'src/app/enum/notepadEnum';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/shared/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UserAutocompleteComponent } from '../autocomplete/user-autocomplete.component';
 
 @Component({
   selector: 'app-notepad-classic',
   templateUrl: './notepad-classic.component.html',
   styleUrls: ['./notepad-classic.component.less'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class NotepadClassicComponent implements OnInit {
 
@@ -24,13 +24,15 @@ export class NotepadClassicComponent implements OnInit {
   hideComposeBtn: boolean = false;
   searchField: NgModel;
   searchFieldFocus: boolean;
+  notificationList = [1];
 
   // store current URL Param
   routedParam: string;
 
   // note item fields
   notepadList = [];
-  noteItemId;
+  noteItemId: string;
+  noteItemUid: string;
   isNewItem: boolean;
   disableCloseBtn: boolean = false;
 
@@ -78,6 +80,8 @@ export class NotepadClassicComponent implements OnInit {
   iframeContentDocument;
   iframeBodyDocument;
 
+  @ViewChild(UserAutocompleteComponent) childComponentRef: UserAutocompleteComponent;
+
   constructor(
     public authService: AuthService,
     public notepadService: NotepadService,
@@ -93,6 +97,7 @@ export class NotepadClassicComponent implements OnInit {
         this.hideComposeBtn = true;
       }
       this.getNotes();
+      // this.getNotifications();
     });
   }
 
@@ -102,6 +107,25 @@ export class NotepadClassicComponent implements OnInit {
       this.notepadList = result;
       this.isLoading = false;
     });
+  }
+
+  getTooltip() {
+    return this.notepadService.viewListBtn ? 'Grid View' : 'List View';
+  }
+
+  getNotepadList() {
+    if (this.searchField) {
+      return this.notepadList.filter(note => { return note.title.toLowerCase().startsWith(this.searchField.toString().toLowerCase()) });;
+    } else {
+      return this.notepadList;
+    }
+  }
+
+  // need to implement
+  private getNotifications() {
+    this.notepadService.getNotifications().then(result => {
+      this.notificationList = result;
+    })
   }
 
   private getIcon() {
@@ -144,13 +168,16 @@ export class NotepadClassicComponent implements OnInit {
 
   onComposeBtnClick() {
     this.disableCloseBtn = false;
+    let userDataId = JSON.parse(localStorage.getItem('user'));
     this.noteItemId = uuidv4();
+    this.noteItemUid = userDataId.uid;
     this.createFrame(null);
   }
 
   onClickCardItem(noteItem: notes) {
     this.disableCloseBtn = false;
     this.noteItemId = noteItem.id;
+    this.noteItemUid = noteItem.uid;
     this.createFrame(noteItem);
   }
 
@@ -162,6 +189,7 @@ export class NotepadClassicComponent implements OnInit {
       this.getIcon() ? this.getIcon() : this.frameLabelIconEnum.UNTAGGED_ICON;
     this.iframeFavourite = noteItem ? noteItem.favourite :
       this.routedParam === this.sideNavEnum.FAVOURITES ? true : false;
+    this.childComponentRef.selectedUser = noteItem ? noteItem.shared : [];
     this.iframeBodyDocument.innerHTML = '';
     if (noteItem && noteItem.innerHtml) {
       const childElement = document.createElement('div');
@@ -177,14 +205,16 @@ export class NotepadClassicComponent implements OnInit {
       this.iframeTitle = 'EMPTYNOTE';
     }
     const newNoteItem = {
+      uid: this.noteItemUid,
       id: this.noteItemId,
       title: this.iframeTitle ? this.iframeTitle.toString() : '',
       textContent: this.iframeBodyDocument.textContent,
       innerHtml: this.iframeBodyDocument.innerHTML,
       favourite: this.iframeFavourite,
-      shared: ['1', '2', '3', '4'],
+      shared: this.childComponentRef.selectedUser,
       color: this.iframeBgColor,
       label: this.iframelabelIcon,
+      trash: this.routedParam === this.sideNavEnum.BIN ? true : false
     };
     this.notepadService.updateNote(newNoteItem).then(() => {
       this.getNotes();
