@@ -12,6 +12,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const materialComponentItem = [
     MatInputModule,
@@ -25,7 +26,8 @@ const materialComponentItem = [
     MatChipsModule,
     MatAutocompleteModule,
     MatBadgeModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SIDENAV } from '../enum/notepadEnum';
 import { notes } from '../vo/notes';
 
@@ -13,8 +14,11 @@ export class NotepadService {
   sideNavEnum = SIDENAV;
 
   constructor(
-    private db: AngularFirestore
-  ) { }
+    private db: AngularFirestore,
+    private _snackBar: MatSnackBar
+  ) {
+    this.openSnackbar();
+  }
 
   public async getAllNotes(param: string, labelIcon: string): Promise<any> {
     let dbData;
@@ -62,6 +66,14 @@ export class NotepadService {
     } else {
       return [];
     }
+  }
+
+
+  openSnackbar() {
+    this._snackBar.open('This is the beta version, some of the functionalities are not implemented.', 'Close', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 
   public async updateNote(notepadItem: notes) {

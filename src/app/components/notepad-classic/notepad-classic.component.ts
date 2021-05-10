@@ -10,6 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConfirmDialogComponent } from 'src/shared/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserAutocompleteComponent } from '../autocomplete/user-autocomplete.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-notepad-classic',
@@ -108,6 +109,7 @@ export class NotepadClassicComponent implements OnInit {
       this.isLoading = false;
     });
   }
+
 
   getTooltip() {
     return this.notepadService.viewListBtn ? 'Grid View' : 'List View';
@@ -231,8 +233,9 @@ export class NotepadClassicComponent implements OnInit {
     let isTrashItem = this.routedParam === this.sideNavEnum.BIN;
     let dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
-        header: 'Move All To Bin',
-        message: 'All items will be moved to bin, Do you want to proceed?',
+        header: this.routedParam === this.sideNavEnum.BIN ? 'Delete all' : 'Move All To Bin',
+        message: this.routedParam === this.sideNavEnum.BIN ? 'All items will be deleted permenantly, Do you want to proceed?'
+          : 'All items will be moved to bin, Do you want to proceed?',
         ok: 'OK',
         cancel: 'CLOSE',
         isTrashItem: isTrashItem,
