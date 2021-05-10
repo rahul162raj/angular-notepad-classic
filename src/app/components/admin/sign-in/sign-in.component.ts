@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -16,13 +17,22 @@ export class SignInComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     this.loginFormGroup = this.formBuilder.group({
       'email': [null, [Validators.required]],
       'password': [null, [Validators.required]]
+    });
+    this.openSnackbar();
+  }
+
+  openSnackbar() {
+    this._snackBar.open('Demo user : rahulrajcse07@gmail.com | password : adminadmin', 'Close', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
     });
   }
 
