@@ -25,7 +25,7 @@ export class ConfirmDialogComponent implements OnInit {
 
   onClickDialogClose() {
     this.isBtnDisable = true;
-    this.notepadService.moveToTrash(this.data.isTrashItem).then(result => {
+    this.notepadService.moveToTrash(this.data.isTrashItem, this.data.filteredItem).then(result => {
       this.dialogRef.close();
     })
   }

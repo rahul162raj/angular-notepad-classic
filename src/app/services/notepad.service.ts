@@ -12,6 +12,8 @@ export class NotepadService {
 
   viewListBtn: boolean;
   sideNavEnum = SIDENAV;
+  allNotepadList = [];
+  initialLoad = false;
 
   constructor(
     private db: AngularFirestore,
@@ -23,30 +25,35 @@ export class NotepadService {
   public async getAllNotes(param: string, labelIcon: string): Promise<any> {
     let dbData;
     let userDataId = JSON.parse(localStorage.getItem('user'));
+    if (!this.initialLoad) {
+      dbData = await this.db.collection("notes").ref
+        .where('uid', '==', userDataId.uid).get();
+      if (dbData) {
+        this.allNotepadList = dbData.docs.map(doc => doc.data());
+      } else {
+        this.allNotepadList = [];
+      }
+      this.initialLoad = true;
+    }
     switch (param) {
       case this.sideNavEnum.ALLNOTES: {
-        dbData = await this.db.collection("notes").ref
-          .where('uid', '==', userDataId.uid)
-          .where('trash', '==', false).get()
+        dbData = this.allNotepadList.filter(note => note.trash === false);
         break;
       }
       case this.sideNavEnum.FAVOURITES: {
-        dbData = await this.db.collection("notes").ref.
-          where('uid', '==', userDataId.uid)
-          .where('trash', '==', false)
-          .where('favourite', '==', true).get()
+        dbData = this.allNotepadList.filter(note => note.favourite === true && note.trash === false);
         break;
       }
       case this.sideNavEnum.SHARED: {
         dbData = await this.db.collection("notes").ref
           .where('shared', 'array-contains', userDataId.email)
           .where('trash', '==', false).get()
+        dbData = dbData.docs.map(doc => doc.data());
         break;
       }
       case this.sideNavEnum.BIN: {
-        dbData = await this.db.collection("notes").ref
-          .where('uid', '==', userDataId.uid)
-          .where('trash', '==', true).get()
+        dbData = this.allNotepadList.filter(note => note.trash === true);
+
         break;
       }
       case this.sideNavEnum.TRAVEL_LABEL:
@@ -54,29 +61,34 @@ export class NotepadService {
       case this.sideNavEnum.LIFE_LABEL:
       case this.sideNavEnum.WORK_LABEL:
       case this.sideNavEnum.UNTAGGED: {
-        dbData = await this.db.collection("notes").ref
-          .where('uid', '==', userDataId.uid)
-          .where('trash', '==', false)
-          .where('label', '==', labelIcon).get()
+        dbData = this.allNotepadList.filter(note => note.trash === false && note.label === labelIcon);
         break;
       }
     }
-    if (dbData) {
-      return dbData.docs.map(doc => doc.data());
-    } else {
-      return [];
-    }
+    return dbData;
   }
 
 
   openSnackbar() {
     this._snackBar.open('This is the beta version, some of the functionalities are not implemented.', 'Close', {
       horizontalPosition: 'end',
-      verticalPosition: 'top',
+      verticalPosition: 'bottom',
     });
   }
 
   public async updateNote(notepadItem: notes) {
+    // update local state
+    let currentIndex = -1;
+    this.allNotepadList.forEach((note, index) => {
+      if (note.id === notepadItem.id) currentIndex = index;
+    });
+    if (currentIndex > -1) {
+      this.allNotepadList[currentIndex] = notepadItem;
+    } else {
+      this.allNotepadList.push(notepadItem);
+    }
+
+    // update db state
     await this.db.collection("notes").doc(notepadItem.id).set({
       uid: notepadItem.uid,
       id: notepadItem.id,
@@ -92,6 +104,22 @@ export class NotepadService {
   }
 
   public async deleteNote(note: notes, isTrashItem: boolean) {
+    // update local state
+    let itemIndex;
+    this.allNotepadList.forEach((data, index) => {
+      if (data.id === note.id) {
+        itemIndex = index;
+      }
+    });
+    if (itemIndex > -1) {
+      if (isTrashItem) {
+        this.allNotepadList.splice(itemIndex, 1);
+      } else {
+        this.allNotepadList[itemIndex].trash = true;
+      }
+    }
+
+    // update db state
     if (isTrashItem) {
       await this.db.collection('notes').doc(note.id).delete();
     } else {
@@ -122,11 +150,29 @@ export class NotepadService {
     }
   }
 
-  public async moveToTrash(isTrashItem: boolean): Promise<any> {
+  public async moveToTrash(isTrashItem: boolean, filteredItem: Array<notes>): Promise<any> {
+
+    let filteredIdList = [];
+    filteredItem.forEach(note => {
+      filteredIdList.push(note.id);
+    });
+
+    // update local state
+    if (isTrashItem) {
+      this.allNotepadList = this.allNotepadList.filter(note => !filteredIdList.includes(note.id));
+    } else {
+      this.allNotepadList.forEach((note, index) => {
+        if (filteredIdList.includes(note.id))
+          this.allNotepadList[index].trash = true;
+      });
+    }
+
+    // update db state
     let userDataId = JSON.parse(localStorage.getItem('user'));
     await this.db.collection("notes").ref
       .where('uid', '==', userDataId.uid)
-      .where('trash', '==', isTrashItem).get().then(response => {
+      .where('trash', '==', isTrashItem)
+      .where('id', 'in', filteredIdList).get().then(response => {
         let batch = this.db.firestore.batch();
         response.docs.forEach((doc) => {
           if (isTrashItem) {
