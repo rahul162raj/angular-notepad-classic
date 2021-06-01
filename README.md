@@ -24,6 +24,7 @@ ng serve
 ## Deploy
 
 ```bash
+ng build
 firebase deploy
 ```
 
