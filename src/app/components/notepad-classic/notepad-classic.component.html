@@ -37,27 +37,28 @@
             <mat-menu #moreMenu="matMenu" xPosition="after">
                 <button mat-menu-item (click)="openDialog()" [disabled]="notepadList.length === 0">Delete All</button>
             </mat-menu>
-            <button class="navbar-icons" matTooltip="Sync" (click)="getNotes()">
+            <button class="navbar-icons" matTooltip="Sync" (click)="onClickSyncBtn()">
                 <mat-icon>sync</mat-icon>
             </button>
-            <button class="navbar-icons" [matTooltip]="getTooltip()"
+            <button class="navbar-icons" [matTooltip]="getTooltip()" *ngIf="notepadList.length !== 0"
                 (click)="notepadService.viewListBtn = !notepadService.viewListBtn">
                 <mat-icon *ngIf="!notepadService.viewListBtn">view_agenda</mat-icon>
                 <mat-icon *ngIf="notepadService.viewListBtn">view_module</mat-icon>
             </button>
             <button class="navbar-icons" matTooltip="Notifications" [matMenuTriggerFor]="notificationMenu">
-                <mat-icon matBadge="1" matBadgeColor="accent" matBadgeSize="small">notifications</mat-icon>
+                <mat-icon [matBadgeHidden]="!notificationList.length" [matBadge]="notificationList.length"
+                    matBadgeColor="accent" matBadgeSize="small">notifications</mat-icon>
             </button>
             <mat-menu class="notification-panel" #notificationMenu="matMenu" xPosition="before">
                 <div class="notification-item" (click)="$event.stopPropagation();">
                     <div class="notification-header">
                         <div class="notification-top">
                             <mat-icon class="notification-logo">notifications_active</mat-icon>
-                            <span class="notification-title subtitle-size-1">Notifications <i
-                                    class="disabled-empasis">(Implementation
-                                    pending)</i></span>
+                            <span class="notification-title subtitle-size-1">Notifications
+                            </span>
                         </div>
-                        <button class="mark-as-read" mat-icon-button>
+                        <button *ngIf="notificationList.length" class="mark-as-read" mat-icon-button
+                            (click)="notificationList.length=0">
                             <mat-icon>check</mat-icon>
                         </button>
                     </div>
@@ -155,7 +156,7 @@
                         </div>
                         <div class="card-bottom">
                             <div class="card-icons">
-                                <mat-icon *ngIf="!note.favourite">star_bordered</mat-icon>
+                                <!-- <mat-icon *ngIf="!note.favourite">star_bordered</mat-icon> -->
                                 <mat-icon *ngIf="note.favourite" [ngStyle]="{'color': '#FBBC04' }">star
                                 </mat-icon>
                             </div>
@@ -238,9 +239,6 @@
                     </button>
                 </div>
                 <div class="divider-stroke" style="border: none">
-                    <button matTooltip="Insert Photo" class="format-icons">
-                        <mat-icon>insert_photo</mat-icon>
-                    </button>
                     <button matTooltip="Undo" (click)="execCmd('undo')" class="format-icons">
                         <mat-icon>undo_icon</mat-icon>
                     </button>
@@ -254,7 +252,8 @@
             <div class="frame-bottom">
                 <div [ngStyle]="{'margin-left': '16px' }">
                     <button matTooltip="Favourite" matTooltipPosition="above" class="frame-icons"
-                        (click)="iframeFavourite = !iframeFavourite">
+                        (click)="iframeFavourite = !iframeFavourite"
+                        [disabled]="routedParam === sideNavEnum['FAVOURITES']">
                         <mat-icon *ngIf="!iframeFavourite">star_bordered</mat-icon>
                         <mat-icon *ngIf="iframeFavourite" [ngStyle]="{'color': '#FBBC04' }">star</mat-icon>
                     </button>
@@ -287,7 +286,7 @@
                         </div>
                     </mat-menu>
                     <button matTooltip="Add Label" matTooltipPosition="above" [matMenuTriggerFor]="labelMenu"
-                        class="frame-icons">
+                        class="frame-icons" [disabled]="!checkDisableLabel()">
                         <mat-icon>{{iframelabelIcon}}</mat-icon>
                     </button>
                     <mat-menu #labelMenu="matMenu" yPosition="above">

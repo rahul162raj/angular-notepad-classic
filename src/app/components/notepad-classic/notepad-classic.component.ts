@@ -25,7 +25,7 @@ export class NotepadClassicComponent implements OnInit {
   hideComposeBtn: boolean = false;
   searchField: NgModel;
   searchFieldFocus: boolean;
-  notificationList = [1];
+  notificationList = Array(4).fill(0);
 
   // store current URL Param
   routedParam: string;
@@ -48,27 +48,8 @@ export class NotepadClassicComponent implements OnInit {
   iframeFavourite: boolean;
   iframeBgColor: string = this.frameBgEnum.WHITE;
   iframelabelIcon: string = this.frameLabelIconEnum.UNTAGGED_ICON;
-  frameBgItems = [
-    this.frameBgEnum.WHITE,
-    this.frameBgEnum.BLUE,
-    this.frameBgEnum.BROWN,
-    this.frameBgEnum.DARKBLUE,
-    this.frameBgEnum.GREEN,
-    this.frameBgEnum.GREY,
-    this.frameBgEnum.ORANGE,
-    this.frameBgEnum.PINK,
-    this.frameBgEnum.PURPLE,
-    this.frameBgEnum.RED,
-    this.frameBgEnum.TEAL,
-    this.frameBgEnum.YELLOW,
-  ];
-  iframeLabelItems = [
-    this.frameLabelIconEnum.TRAVEL_ICON,
-    this.frameLabelIconEnum.PERSONAL_ICON,
-    this.frameLabelIconEnum.WORK_iCON,
-    this.frameLabelIconEnum.LIFE_ICON,
-    this.frameLabelIconEnum.UNTAGGED_ICON,
-  ];
+  frameBgItems = Object.values(this.frameBgEnum);
+  iframeLabelItems = Object.values(this.frameLabelIconEnum)
   loadIframe: boolean;
 
   // iframe style
@@ -98,7 +79,6 @@ export class NotepadClassicComponent implements OnInit {
         this.hideComposeBtn = true;
       }
       this.getNotes();
-      // this.getNotifications();
     });
   }
 
@@ -147,16 +127,15 @@ export class NotepadClassicComponent implements OnInit {
   deleteNote(note: notes) {
     let isTrashItem = this.routedParam === this.sideNavEnum.BIN;
     this.notepadService.deleteNote(note, isTrashItem).then(() => {
-      let itemIndex;
-      this.notepadList.forEach((data, index) => {
-        if (data.id === note.id) {
-          itemIndex = index;
-        }
-      });
-      if (itemIndex > -1) {
-        this.notepadList.splice(itemIndex, 1);
-      }
+      this.getNotes();
     });
+  }
+
+  checkDisableLabel() {
+    return (this.routedParam === this.sideNavEnum['ALLNOTES'] ||
+      this.routedParam === this.sideNavEnum['FAVOURITES'] ||
+      this.routedParam === this.sideNavEnum['SHARED'] ||
+      this.routedParam === this.sideNavEnum['BIN'])
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -239,6 +218,7 @@ export class NotepadClassicComponent implements OnInit {
         ok: 'OK',
         cancel: 'CLOSE',
         isTrashItem: isTrashItem,
+        filteredItem: this.notepadList
       },
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -246,6 +226,11 @@ export class NotepadClassicComponent implements OnInit {
         this.getNotes();
       }
     });
+  }
+
+  onClickSyncBtn() {
+    this.notepadService.initialLoad = false;
+    this.getNotes();
   }
 
   ngAfterViewChecked(): void {
